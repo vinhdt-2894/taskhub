@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
 router = APIRouter(
-    prefix="/api/projects",
+    prefix="/projects",
     tags=["Projects"],
 )
 
 
-@router.get("/ping")
+@router.get("/ping", summary="Check projects API availability")
 def ping_projects():
     return {"module": "projects", "status": "ok"}

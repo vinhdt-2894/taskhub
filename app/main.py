@@ -8,7 +8,7 @@ app = FastAPI(
 )
 
 
-@app.get("/health", tags=["Health"])
+@app.get("/health", tags=["Health"], summary="Check TaskHub API health")
 def health():
     return {"status": "ok"}
 
