@@ -1,33 +1,24 @@
 from datetime import date, datetime
-from enum import Enum
 
 from sqlalchemy import Date, DateTime, Enum as SqlEnum, ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.constants import TASK_TITLE_MAX_LENGTH
 from app.db.base import Base
-
-
-class TaskStatus(str, Enum):
-    TODO = "TODO"
-    IN_PROGRESS = "IN_PROGRESS"
-    IN_REVIEW = "IN_REVIEW"
-    DONE = "DONE"
-
-
-class TaskPriority(str, Enum):
-    LOW = "LOW"
-    MEDIUM = "MEDIUM"
-    HIGH = "HIGH"
-    URGENT = "URGENT"
+from app.enums import TaskPriority, TaskStatus
 
 
 class Task(Base):
     __tablename__ = "tasks"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"))
-    assignee_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
-    title: Mapped[str] = mapped_column(String(200))
+    project_id: Mapped[int] = mapped_column(
+        ForeignKey("projects.id", ondelete="CASCADE"), index=True
+    )
+    assignee_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), index=True
+    )
+    title: Mapped[str] = mapped_column(String(TASK_TITLE_MAX_LENGTH))
     description: Mapped[str | None] = mapped_column(Text)
     status: Mapped[TaskStatus] = mapped_column(
         SqlEnum(
@@ -50,7 +41,9 @@ class Task(Base):
         server_default=TaskPriority.MEDIUM.value,
     )
     due_date: Mapped[date | None] = mapped_column(Date)
-    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    created_by: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), index=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

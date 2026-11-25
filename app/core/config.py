@@ -1,6 +1,17 @@
-import os
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=Path(__file__).resolve().parents[2] / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    database_url: str = Field(validation_alias="DATABASE_URL", min_length=1)
+
+
+settings = Settings()

@@ -8,8 +8,8 @@ class TaskLabel(Base):
     __tablename__ = "task_labels"
 
     task_id: Mapped[int] = mapped_column(
-        ForeignKey("tasks.id"), primary_key=True
+        ForeignKey("tasks.id", ondelete="CASCADE"), primary_key=True
     )
     label_id: Mapped[int] = mapped_column(
-        ForeignKey("labels.id"), primary_key=True
+        ForeignKey("labels.id", ondelete="CASCADE"), primary_key=True, index=True
     )

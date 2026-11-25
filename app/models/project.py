@@ -1,23 +1,21 @@
 from datetime import datetime
-from enum import Enum
 
 from sqlalchemy import DateTime, Enum as SqlEnum, ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.constants import NAME_MAX_LENGTH
 from app.db.base import Base
-
-
-class ProjectStatus(str, Enum):
-    ACTIVE = "ACTIVE"
-    ARCHIVED = "ARCHIVED"
+from app.enums import ProjectStatus
 
 
 class Project(Base):
     __tablename__ = "projects"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    workspace_id: Mapped[int] = mapped_column(ForeignKey("workspaces.id"))
-    name: Mapped[str] = mapped_column(String(120))
+    workspace_id: Mapped[int] = mapped_column(
+        ForeignKey("workspaces.id", ondelete="CASCADE"), index=True
+    )
+    name: Mapped[str] = mapped_column(String(NAME_MAX_LENGTH))
     description: Mapped[str | None] = mapped_column(Text)
     status: Mapped[ProjectStatus] = mapped_column(
         SqlEnum(
