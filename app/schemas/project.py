@@ -2,6 +2,7 @@ from datetime import datetime
 
 from app.enums import ProjectStatus
 from app.schemas.base import BaseSchema
+from app.schemas.task import TaskResponse
 
 
 class ProjectResponse(BaseSchema):
@@ -11,3 +12,7 @@ class ProjectResponse(BaseSchema):
     description: str | None
     status: ProjectStatus
     created_at: datetime
+
+
+class ProjectDetailResponse(ProjectResponse):
+    tasks: list[TaskResponse]

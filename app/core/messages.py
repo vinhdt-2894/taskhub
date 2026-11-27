@@ -1,1 +1,5 @@
 PROJECT_NOT_FOUND = "Project not found"
+USER_NOT_FOUND = "User not found"
+TASK_CREATOR_NOT_FOUND = "Task creator does not exist"
+TASK_ASSIGNEE_NOT_FOUND = "Task assignee does not exist"
+TASK_LABELS_OUTSIDE_PROJECT = "All labels must exist in this project"
