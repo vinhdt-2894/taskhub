@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from app.core.messages import PROJECT_NOT_FOUND
+from app.core.messages import PROJECT_NOT_FOUND, USER_NOT_FOUND
 
 
 class AppError(Exception):
@@ -13,3 +13,13 @@ class AppError(Exception):
 class ProjectNotFoundError(AppError):
     def __init__(self) -> None:
         super().__init__(HTTPStatus.NOT_FOUND, PROJECT_NOT_FOUND)
+
+
+class UserNotFoundError(AppError):
+    def __init__(self) -> None:
+        super().__init__(HTTPStatus.NOT_FOUND, USER_NOT_FOUND)
+
+
+class InvalidTaskReferenceError(AppError):
+    def __init__(self, detail: str) -> None:
+        super().__init__(HTTPStatus.UNPROCESSABLE_ENTITY, detail)

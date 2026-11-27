@@ -1,11 +1,16 @@
 from datetime import date, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Date, DateTime, Enum as SqlEnum, ForeignKey, String, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.constants import TASK_TITLE_MAX_LENGTH
 from app.db.base import Base
 from app.enums import TaskPriority, TaskStatus
+
+if TYPE_CHECKING:
+    from app.models.label import Label
+    from app.models.project import Project
 
 
 class Task(Base):
@@ -46,4 +51,9 @@ class Task(Base):
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
+    )
+
+    project: Mapped["Project"] = relationship(back_populates="tasks", lazy="raise")
+    labels: Mapped[list["Label"]] = relationship(
+        secondary="task_labels", order_by="Label.id", lazy="raise", passive_deletes=True
     )
